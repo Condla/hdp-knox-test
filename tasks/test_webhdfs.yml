@@ -1,0 +1,32 @@
+- name: request hdfs user home directory via knox
+  uri:
+    url: https://localhost:8443/gateway/default/webhdfs/v1/?op=GETHOMEDIRECTORY
+    user: "{{ test_user_granted }}"
+    password: "{{ test_user_granted_password }}"
+    method: GET
+    validate_certs: no
+    status_code: 200
+  register: response
+   
+- name: validate response
+  assert:
+    that:
+      - response.json.Path == "{{ test_user_granted_home_dir }}"
+      
+- name: request hdfs user home directory via knox using wrong password
+  uri:
+    url: https://localhost:8443/gateway/default/webhdfs/v1/?op=GETHOMEDIRECTORY
+    user: "{{ test_user_denied }}"
+    password: this-is-my-wrong-password
+    method: GET
+    validate_certs: no
+    status_code: 401
+  
+- name: request hdfs user home directory via knox of unauthorized user
+  uri:
+    url: https://localhost:8443/gateway/default/webhdfs/v1/?op=GETHOMEDIRECTORY
+    user: "{{ test_user_denied }}"
+    password: "{{ test_user_denied_password }}"
+    method: GET
+    validate_certs: no
+    status_code: 403

@@ -1,2 +1,9 @@
 ---
 # tasks file for hdp-knox-test
+
+- name: test hdfs + ranger integration
+  include: test_webhdfs.yml
+
+- name:  test oozie + ranger integration
+  include: test_oozie.yml
+  with_items: "{{ groups.knox }}"

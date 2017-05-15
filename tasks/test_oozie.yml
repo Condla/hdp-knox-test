@@ -1,0 +1,22 @@
+
+- name: check if oozie UI is accessible via Knox
+  uri:
+    url: https://localhost:8443/gateway/default/oozie/versions
+    user: "{{ test_user_granted }}"
+    password: "{{ test_user_granted_password }}"
+    method: GET
+    validate_certs: no
+    status_code: 200
+  register: response
+  ignore_errors: yes
+    
+- name: fail when oozie error code
+  fail: "msg='oozie_error_code {{ response.oozie_error_code }}, oozie_error_message: {{ response.oozie_error_message }}'"
+  when: "'oozie_error_code' in response"
+
+- name: validate response
+  assert:
+    that:
+      - 0 in response.json
+      - 1 in response.json
+      - 2 in response.json

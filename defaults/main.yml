@@ -1,2 +1,8 @@
 ---
 # defaults file for hdp-knox-test
+
+test_user_granted: "username1"
+test_user_granted_password: "password1"
+test_user_granted_home_dir: "/user/username1"
+test_user_denied: "username2"
+test_user_denied_password: "username2"
